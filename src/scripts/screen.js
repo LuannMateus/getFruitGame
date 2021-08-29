@@ -1,29 +1,6 @@
 const screen = document.getElementById('screen');
 const context = screen.getContext('2d');
 
-const keyboardMovement = {
-  ArrowUp: (playerId) => {
-    player = game.state.players[playerId];
-    if (player.y - 1 >= 0) player.y = player.y - 1;
-    return;
-  },
-  ArrowRight: (playerId) => {
-    player = game.state.players[playerId];
-    if (player.x + 1 < screen.width) player.x = player.x + 1;
-    return;
-  },
-  ArrowDown: (playerId) => {
-    player = game.state.players[playerId];
-    if (player.y + 1 < screen.height) player.y = player.y + 1;
-    return;
-  },
-  ArrowLeft: (playerId) => {
-    player = game.state.players[playerId];
-    if (player.x - 1 >= 0) player.x = player.x - 1;
-    return;
-  },
-};
-
 function createGame() {
   const state = {
     players: {
@@ -38,7 +15,34 @@ function createGame() {
   function movePlayer(command) {
     console.log(`Moving ${command.playerId} with ${command.keyPressed}`);
 
-    keyboardMovement[command.keyPressed](command.playerId);
+    const acceptedMoves = {
+      ArrowUp: (playerId) => {
+        player = game.state.players[playerId];
+        if (player.y - 1 >= 0) player.y = player.y - 1;
+        return;
+      },
+      ArrowRight: (playerId) => {
+        player = game.state.players[playerId];
+        if (player.x + 1 < screen.width) player.x = player.x + 1;
+        return;
+      },
+      ArrowDown: (playerId) => {
+        player = game.state.players[playerId];
+        if (player.y + 1 < screen.height) player.y = player.y + 1;
+        return;
+      },
+      ArrowLeft: (playerId) => {
+        player = game.state.players[playerId];
+        if (player.x - 1 >= 0) player.x = player.x - 1;
+        return;
+      },
+    };
+
+    if (!(command.keyPressed in acceptedMoves)) {
+      return;
+    }
+
+    acceptedMoves[command.keyPressed](command.playerId);
   }
 
   return {
@@ -88,10 +92,6 @@ function createKeyboardListener() {
 
   function handleKeydown(event) {
     const keyPressed = event.key;
-
-    if (!(keyPressed in keyboardMovement)) {
-      return;
-    }
 
     const command = {
       playerId: 'player1',
