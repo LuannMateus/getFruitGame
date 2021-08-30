@@ -46,7 +46,7 @@ export default function createGame() {
     const playerId = command.playerId;
     const player = state.players[playerId];
 
-    console.log();
+    console.log(state);
 
     console.log(`Moving ${playerId} with ${command.keyPressed}`);
 
