@@ -22,6 +22,7 @@ const PORT = 3001;
 const HOSTNAME = 'localhost';
 
 const game = createGame();
+game.start();
 
 game.subscribe((command: Command) => {
   console.log(`> Emitting ${command.type}`);
