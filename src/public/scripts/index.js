@@ -19,6 +19,18 @@ socket.on('connect', () => {
   console.log(playerId);
 });
 
-socket.on('setup', (data) => {
-  game.state = data;
+socket.on('setup', (state) => {
+  game.setState(state);
+});
+
+socket.on('add-player', (command) => {
+  console.log(
+    `Receiving ${command.type} -> (${command.playerX}, ${command.playerY}) }`
+  );
+  game.addPlayer(command);
+});
+
+socket.on('remove-player', (command) => {
+  console.log(`Receiving ${command.type} -> DELETE (${command.playerId} }`);
+  game.removePlayer(command);
 });

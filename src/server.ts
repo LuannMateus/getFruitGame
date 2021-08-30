@@ -3,6 +3,7 @@ const socketIo = require('socket.io');
 import http from 'http';
 import path from 'path';
 import { Socket } from 'socket.io';
+import { Command } from './model/Command.js';
 
 import createGame from './public/scripts/game.js';
 
@@ -21,19 +22,24 @@ const PORT = 3001;
 const HOSTNAME = 'localhost';
 
 const game = createGame();
-game.addPlayer({ playerId: 'player1', playerX: 0, playerY: 0 });
-game.addFruit({ fruitId: 'fruit1', fruitX: 5, fruitY: 4 });
-game.addFruit({ fruitId: 'fruit2', fruitX: 2, fruitY: 3 });
-game.addFruit({ fruitId: 'fruit3', fruitX: 6, fruitY: 2 });
-game.addFruit({ fruitId: 'fruit4', fruitX: 3, fruitY: 1 });
 
-game.movePlayer({ playerId: 'player1', keyPressed: 'ArrowDown' });
+game.subscribe((command: Command) => {
+  console.log(`> Emitting ${command.type}`);
+
+  io.emit(command.type, command);
+});
 
 io.on('connection', (socket: Socket) => {
   const playerId = socket.id;
   console.log('Player connected in Server with id: ' + playerId);
 
+  game.addPlayer({ playerId });
+
   socket.emit('setup', game.state);
+
+  socket.on('disconnect', () => {
+    game.removePlayer({ playerId });
+  });
 });
 
 server.listen(PORT, HOSTNAME, () => {
