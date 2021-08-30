@@ -40,6 +40,13 @@ io.on('connection', (socket: Socket) => {
   socket.on('disconnect', () => {
     game.removePlayer({ playerId });
   });
+
+  socket.on('move-player', (command: Command) => {
+    command.playerId = playerId;
+    command.type = 'move-player';
+
+    game.movePlayer(command);
+  });
 });
 
 server.listen(PORT, HOSTNAME, () => {
