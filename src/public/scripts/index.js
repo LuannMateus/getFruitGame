@@ -13,6 +13,7 @@ socket.on('connect', () => {
   console.log('Player connect with ID -> ' + playerId);
 
   const screen = document.getElementById('screen');
+
   renderScreen(screen, game, requestAnimationFrame, playerId);
 });
 
@@ -53,4 +54,36 @@ socket.on('add-fruit', (command) => {
 
 socket.on('remove-fruit', (command) => {
   game.removeFruit(command);
+});
+
+socket.on('players', (data) => {
+  const scoreTable = document.querySelector('.table__body');
+  const playersId = Object.keys(game.state.players);
+
+  const playersRanking = playersId
+    .map((playerId) => {
+      const { points } = game.state.players[playerId];
+
+      return `  
+      <tr>
+        <td>
+          <p class="ranking-players__title">${playerId}</p>
+        </td>
+        <td>
+          <span class="ranking-players__points">${points}</span>
+        </td>
+      </tr>
+    `;
+    })
+    .join('');
+
+  scoreTable.innerHTML = playersRanking;
+});
+
+socket.on('total-players', (data) => {
+  const totalPlayers = data;
+
+  const totalPlayersElement = document.querySelector('.total-players__total');
+
+  totalPlayersElement.innerHTML = totalPlayers;
 });

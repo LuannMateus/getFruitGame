@@ -1,0 +1,36 @@
+:root {
+  --bg-primary-color: #fff;
+
+  --text-primary-color: #000;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  width: 100%;
+
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+/* 
+
+// * sm 
+@media screen and (max-width: 569px) {
+}
+
+  * md
+@media screen and (max-width: 799px) {
+}
+
+// * lg
+@media screen and (max-width: 999px) {
+}
+
+// * xl
+@media screen and (min-width: 1000px) {
+}
+
+/*

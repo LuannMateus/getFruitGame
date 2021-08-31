@@ -3,8 +3,8 @@ export default function createGame() {
     players: {},
     fruits: {},
     screen: {
-      width: 10,
-      height: 10,
+      width: 40,
+      height: 20,
     },
   };
 
@@ -44,6 +44,7 @@ export default function createGame() {
     state.players[playerId] = {
       x: playerX,
       y: playerY,
+      points: 0,
     };
 
     notifyAll({
@@ -143,6 +144,11 @@ export default function createGame() {
 
       if (player.x === fruit.x && player.y === fruit.y) {
         removeFruit({ fruitId });
+        player.points++;
+
+        notifyAll({
+          type: 'players',
+        });
       }
     }
   }

@@ -12,6 +12,8 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 app.use(express.static('public'));
+app.use('/styles', express.static(__dirname + `/public/styles`));
+app.use('/assets', express.static(__dirname + `/public/assets/`));
 app.use('/scripts', express.static(__dirname + `/public/scripts`));
 
 app.get('/', (req: Request, res: Response) => {
@@ -32,14 +34,24 @@ game.subscribe((command: Command) => {
 
 io.on('connection', (socket: Socket) => {
   const playerId = socket.id;
-  console.log('Player connected in Server with id: ' + playerId);
+  const totalClients = io.sockets.server.eio.clientsCount;
+
+  // console.log('Player connected in Server with id: ' + playerId);
 
   game.addPlayer({ playerId });
 
   socket.emit('setup', game.state);
 
+  console.log(io.sockets.server);
+
   socket.on('disconnect', () => {
     game.removePlayer({ playerId });
+
+    socket.emit('total-players', totalClients - 1);
+    socket.broadcast.emit('total-players', totalClients - 1);
+
+    socket.emit('players', [playerId]);
+    socket.broadcast.emit('players', [playerId]);
   });
 
   socket.on('move-player', (command: Command) => {
@@ -48,6 +60,12 @@ io.on('connection', (socket: Socket) => {
 
     game.movePlayer(command);
   });
+
+  socket.emit('players', [playerId]);
+  socket.broadcast.emit('players', [playerId]);
+
+  socket.emit('total-players', totalClients);
+  socket.broadcast.emit('total-players', totalClients);
 });
 
 server.listen(PORT, HOSTNAME, () => {

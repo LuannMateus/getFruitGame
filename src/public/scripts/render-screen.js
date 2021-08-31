@@ -6,7 +6,7 @@ export default function renderScreen(
 ) {
   const context = screen.getContext('2d');
 
-  context.clearRect(0, 0, 10, 10);
+  context.clearRect(0, 0, 40, 20);
 
   for (const playerId in game.state.players) {
     const player = game.state.players[playerId];
